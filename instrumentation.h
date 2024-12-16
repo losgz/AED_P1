@@ -1,6 +1,9 @@
+#ifndef _INSTRUMENTATION_H
+#define _INSTRUMENTATION_H
+
 /// A generic instrumentation module.
 ///
-/// João Manuel Rodrigues, AED, 2023
+/// João Manuel Rodrigues, AED, 2023, 2024
 /// Code for cpu_time() by
 /// Tomás Oliveira e Silva, AED, October 2021
 ///
@@ -9,7 +12,7 @@
 /// // Name the counters you're going to use: 
 /// InstrName[0] = "memops";
 /// InstrName[1] = "adds";
-/// InstrCalibrate();  // Call once, to measure CTU
+/// InstrCalibrate();  // Call once, to measure CTU or read it from env var
 /// ...
 /// InstrReset();  // reset to zero
 /// for (...) {
@@ -17,10 +20,7 @@
 ///   InstrCount[1] += 1;  // to count addition
 ///   a[k] = a[i] + a[j];
 /// }
-/// InstrPrint();  // to show time and counters
-
-#ifndef INSTRUMENTATION_H
-#define INSTRUMENTATION_H
+/// InstrPrint();  // to show time, calibrated time and counters
 
 /// Cpu time in seconds
 double cpu_time(void) ; ///
@@ -43,6 +43,8 @@ extern double InstrCTU;  ///extern
 /// Find the Calibrated Time Unit (CTU).
 /// Run and time a loop of basic memory and arithmetic operations to set
 /// a reasonably cpu-independent time unit.
+/// If environment variable INSTRCTU is defined, get CTU from there
+/// and bypass the calibration loop entirely.
 void InstrCalibrate(void) ;
 
 /// Reset counters to zero and store cpu_time.
